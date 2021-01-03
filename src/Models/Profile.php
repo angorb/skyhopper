@@ -67,9 +67,4 @@ class Profile
     {
         $this->vtx = $vtx;
     }
-
-    public function hasVTX(): bool
-    {
-        return !empty($this->vtx);
-    }
 }

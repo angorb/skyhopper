@@ -12,6 +12,7 @@ class Reader
     private $profileId;
     private $profile;
     private $vtx;
+    private $betaflight = \false;
 
     private function __construct(string $file)
     {
@@ -31,12 +32,15 @@ class Reader
         return $this;
     }
 
-    public static function fromFile($file)
+    public static function fromFile($file, $strict = \false)
     {
         $reader = new Reader($file);
         // add VTX table
         if (!empty($reader->vtx)) {
             $reader->profile->setVTX($reader->vtx);
+        }
+        if ($strict && !$reader->betaflight) {
+            return \false;
         }
         return $reader->profile;
     }
@@ -100,8 +104,11 @@ class Reader
 
         $section = \array_shift($data);
 
-        if ($section === 'name:') {
-            $this->profile->setCraftName(\implode(" ", $data));
+        switch ($section) {
+            case 'Betaflight':$this->betaflight = \true;
+                break;
+            case 'name:':$this->profile->setCraftName(\implode(" ", $data));
+                break;
         }
 
         $this->section = $section;

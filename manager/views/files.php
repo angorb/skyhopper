@@ -5,7 +5,9 @@ use Angorb\BetaflightProfiler\Reader;
 
 /* icon style setup */
 $icons = [
-    'vtx' => '<i class="fas fa-broadcast-tower"></i>',
+    'vtx' => '<i class="fas fa-broadcast-tower" data-toggle="tooltip" data-placement="top" title="VTX"></i>',
+    'json' => '<i class="fab fa-js-square" data-toggle="tooltip" data-placement="top" title="JSON"></i>',
+
 ];
 
 $files = glob($filesDir . "/*.txt");
@@ -16,7 +18,9 @@ $filters = [
 ];
 foreach ($files as $file) {
 
-    $profile = Reader::fromFile($file);
+    if (!$profile = Reader::fromFile($file, true)) {
+        continue;
+    }
 
     /* filters */
     if ($profile->getBoardName() != "" &&
@@ -36,10 +40,10 @@ foreach ($files as $file) {
 <!-- files.php -->
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Betaflight Profiles</h4>
+        <h4 class="card-title">File Manager</h4>
         <p class="card-text">Text</p>
         <table class="table table-striped table-bordered dt-responsive nowrap" id="profileTable">
-            <thead>
+            <thead class="thead thead-dark">
                 <tr>
                     <th>Filename</th>
                     <th>Board Name</th>
@@ -58,17 +62,21 @@ foreach ($files as $file) {
                     <td><?=$profile['data']->getCraftName() ?? ""?></td>
                     <td><?=date("m/d/Y g:i:sa", $profile['modified'])?></td>
                     <td>
-                        <?=empty($profile['data']->hasVTX()) ? '' : $icons['vtx']?>
+                        <a href="<?=$_SERVER['PHP_SELF'] . "?view=json&activeFile={$profile['filename']}"?>">
+                            <?=$icons['json']?>
+                        </a>
+                        <?=(!$profile['data']->vtx->set()) ? null : $icons['vtx']?>
                     </td>
                 </tr>
                 <?php endforeach;?>
             </tbody>
         </table>
+        <hr>
         <div id="fileUploader">
-            <h4>Upload File:</h4>
+            <h5>Upload a file</h5>
             <form enctype="multipart/form-data" action="actions/upload.php" method="post" id="fileUploadForm">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile" name="file" accept=".txt">
+                    <input type="file" class="custom-file-input" id="customFile" name="profileTxtFile" accept=".txt">
                     <label class="custom-file-label" for="customFile">Choose file</label>
                 </div>
                 <button id="uploadFormSubmit" name="submit" type="submit" class="btn btn-primary">Submit</button>

@@ -1,0 +1,29 @@
+
+    body {
+        background-color: #0c0e12;
+        color: #333;
+    }
+
+    a, 
+    .fas {
+        color: darkmagenta;
+    }
+
+    a:hover {
+        color: darkorchid;
+    }
+
+    nav {
+        background-color: #101623;
+    }
+
+    div.card {
+        background-color: aliceblue;
+    }
+
+    div.card,
+    div.alert,
+    div#fileUploader,
+    button#uploadFormSubmit {
+        margin-top: 15px;
+    }

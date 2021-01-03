@@ -17,21 +17,18 @@ require_once __DIR__ . "/config.php";
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="shttps://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css">
-    <style>
-    div#fileUploader {
-        margin-top: 15px;
-    }
-
-    button#uploadFormSubmit {
-        margin-top: 15px;
-    }
-    </style>
+    <link href="styles/rainbow.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/space.css">
 </head>
 
 <body>
     <?php include __DIR__ . "/views/navbar.php";?>
     <div class="container">
         <?=getSessionMessage()?>
+        <?php
+//include __DIR__ . "/views/debug.php";
+include __DIR__ . "/views/json.php";
+?>
         <?php include __DIR__ . "/views/files.php";?>
 
     </div>
@@ -53,8 +50,10 @@ require_once __DIR__ . "/config.php";
     <script src="//cdn.datatables.net/plug-ins/1.10.22/sorting/datetime-moment.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="scripts/rainbow.js"></script>
     <script>
     $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
         $.fn.dataTable.moment('MM/DD/YYYY h:mm:ssa');
         $('#profileTable').DataTable({
             stateSave: true

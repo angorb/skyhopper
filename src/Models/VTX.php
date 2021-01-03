@@ -128,4 +128,8 @@ class VTX
         return $val;
     }
 
+    public function set()
+    {
+        return !(empty($this->bands_list));
+    }
 }

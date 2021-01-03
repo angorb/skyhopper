@@ -7,7 +7,6 @@ use Angorb\BetaflightProfiler\Reader;
 $icons = [
     'vtx' => '<i class="fas fa-broadcast-tower" data-toggle="tooltip" data-placement="top" title="VTX"></i>',
     'json' => '<i class="fab fa-js-square" data-toggle="tooltip" data-placement="top" title="JSON"></i>',
-
 ];
 
 $files = glob($filesDir . "/*.txt");

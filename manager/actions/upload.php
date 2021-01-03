@@ -1,4 +1,7 @@
 <?php
+
+use Angorb\BetaflightProfiler\Reader;
+
 require_once __DIR__ . "/../config.php";
 
 $targetFile = $filesDir . $_FILES['profileTxtFile']['name'];
@@ -24,6 +27,16 @@ if (!in_array($targetFileType, $allowedFileExtensions)) {
     die();
 }
 
+if (!$testProfile = Reader::fromFile($_FILES["profileTxtFile"]["tmp_name"], true)) {
+    setSessionMessage(
+        "<strong>ERROR:</strong> Could not upload. '{$_FILES['profileTxtFile']['name']}' is unable to be validated as a Betaflight craft settings file.",
+        "danger"
+    );
+    header("Location: " . $_SERVER['HTTP_REFERER'] ?? "../index.php");
+    die();
+}
+
+// commit to the upload
 if (!move_uploaded_file($_FILES["profileTxtFile"]["tmp_name"], $targetFile)) {
     setSessionMessage(
         "<strong>ERROR:</strong> Could not upload. An unexpected error occured.",

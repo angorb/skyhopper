@@ -4,7 +4,7 @@ namespace Angorb\BetaflightProfiler\Models;
 
 use Angorb\BetaflightProfiler\Traits\Savable;
 
-class VideoTransmitterTable
+class VTX
 {
     use Savable;
 
@@ -44,7 +44,7 @@ class VideoTransmitterTable
         return $this->findEdgeFrequency(self::MAX_FREQUENCY, $frequencyOnly);
     }
 
-    public function getChannelTable()
+    public function getChannelTable(bool $returnChannelWidth = \false)
     {
         $val = [];
         foreach ($this->bands_list as $band) {
@@ -54,7 +54,7 @@ class VideoTransmitterTable
                     continue;
                 }
                 $channel = \sprintf("%s %s", $name, ($index + 1));
-                $val[$channel] = $frequency;
+                $val[$channel] = ($returnChannelWidth) ? $this->getChannelWidth($frequency) : $frequency;
             }
         }
         \asort($val);
@@ -99,6 +99,15 @@ class VideoTransmitterTable
         }
 
         return $val;
+    }
+
+    public function getChannelWidth(int $frequency)
+    {
+        return [
+            'low' => $frequency - 150,
+            'center' => $frequency,
+            'high' => $frequency + 150,
+        ];
     }
 
     public function findUnusedChannels()

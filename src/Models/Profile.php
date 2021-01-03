@@ -16,9 +16,31 @@ class Profile
     #properties
     protected $master;
 
+    public function setMasterProperty($name, $value)
+    {
+        $propertyName = Settings::$masterPropertyName;
+        $this->$propertyName[$name] = $value;
+    }
+    public function setProfileProperty(string $profile, int $id, string $name, $value)
+    {
+        $this->$profile[$id][$name] = $value;
+    }
+
+    public function getProfileCount(string $profile)
+    {
+        return \count($this->$profile ?? []);
+    }
+
+    /* CRAFT FEATURES */
+
     public function setBoardName(string $name)
     {
         $this->board_name = $name;
+    }
+
+    public function getBoardName(): ?string
+    {
+        return $this->board_name;
     }
 
     public function setManufacturerId(string $id)
@@ -36,18 +58,18 @@ class Profile
         $this->name = $name;
     }
 
-    public function setMasterProperty($name, $value)
+    public function getCraftName()
     {
-        $propertyName = Settings::$masterPropertyName;
-        $this->$propertyName[$name] = $value;
-    }
-    public function setProfileProperty(string $profile, int $id, string $name, $value)
-    {
-        $this->$profile[$id][$name] = $value;
+        return $this->name ?? null;
     }
 
-    public function setVtxTable(VideoTransmitterTable $vtxtable)
+    public function setVTX(VTX $vtx)
     {
-        $this->vtxtable = $vtxtable;
+        $this->vtx = $vtx;
+    }
+
+    public function hasVTX(): bool
+    {
+        return !empty($this->vtx);
     }
 }

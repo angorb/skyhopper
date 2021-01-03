@@ -3,7 +3,7 @@
 namespace Angorb\BetaflightProfiler;
 
 use Angorb\BetaflightProfiler\Models\Profile;
-use Angorb\BetaflightProfiler\Models\VideoTransmitterTable;
+use Angorb\BetaflightProfiler\Models\VTX;
 
 class Reader
 {
@@ -11,12 +11,12 @@ class Reader
     private $section;
     private $profileId;
     private $profile;
-    private $vtxtable;
+    private $vtx;
 
     private function __construct(string $file)
     {
         $this->profile = new Profile();
-        $this->vtxtable = new VideoTransmitterTable();
+        $this->vtx = new VTX();
 
         if ($inFile = \fopen($file, 'r')) {
             // TODO could not open file
@@ -35,8 +35,8 @@ class Reader
     {
         $reader = new Reader($file);
         // add VTX table
-        if (!empty($reader->vtxtable)) {
-            $reader->profile->setVtxTable($reader->vtxtable);
+        if (!empty($reader->vtx)) {
+            $reader->profile->setVTX($reader->vtx);
         }
         return $reader->profile;
     }
@@ -60,12 +60,12 @@ class Reader
                 break;
             case 'set':$this->setProperty($data);
                 break;
-            case 'vtxtable':$this->parseVtxTable($data);
+            case 'vtxtable':$this->parseVTX($data);
                 break;
         }
     }
 
-    private function parseVtxTable(array $data)
+    private function parseVTX(array $data)
     {
         $lineType = \array_shift($data);
 
@@ -74,7 +74,7 @@ class Reader
             $name = \array_shift($data);
             $letter = \array_shift($data);
             $is_factory_band = ('FACTORY' === \array_shift($data)) ? "true" : "false";
-            $this->vtxtable->setBand(
+            $this->vtx->setBand(
                 $id,
                 $name,
                 $letter,
@@ -86,7 +86,7 @@ class Reader
         if ($lineType === 'powervalues' || $lineType === 'powerlabels') {
             $name = \substr(\str_replace('power', '', $lineType), 0, -1);
             foreach ($data as $id => $value) {
-                $this->vtxtable->setPower($id, $name, $value);
+                $this->vtx->setPower($id, $name, $value);
             }
         }
     }

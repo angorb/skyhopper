@@ -1,0 +1,17 @@
+{
+    "name": "angorb/betaflight-profiler-php",
+    "require": {
+        "league/climate": "^3.2"
+    },
+    "authors": [
+        {
+            "name": "Nick Brogna",
+            "email": "nick@wemakepretty.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Angorb\\BetaflightProfiler\\": "src/"
+        }
+    }
+}

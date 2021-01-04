@@ -132,4 +132,23 @@ class VTX
     {
         return !(empty($this->bands_list));
     }
+
+    public function getNumBands()
+    {
+        return \count($this->bands_list);
+    }
+
+    public function getNumChannels()
+    {
+        if (empty($this->bands_list)) {
+            return 0;
+        }
+
+        $numChannels = 0;
+        foreach (\array_column($this->bands_list, 'frequencies') as $channels) {
+            $numChannels = (\count($channels) > $numChannels) ? \count($channels) : $numChannels;
+        }
+
+        return $numChannels;
+    }
 }

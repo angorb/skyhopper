@@ -2,17 +2,23 @@
 
 namespace Angorb\BetaflightProfiler\Models;
 
-use Angorb\BetaflightProfiler\Traits\Savable;
+use JsonSerializable;
 
-class VTX
+class VTX implements JsonSerializable
 {
-    use Savable;
-
-    const MIN_FREQUENCY = 0;
-    const MAX_FREQUENCY = 1;
+    protected const MIN_FREQUENCY = 0;
+    protected const MAX_FREQUENCY = 1;
 
     private $bands_list;
     private $powerlevels_list;
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'bands' => $this->bands_list,
+            'power' => $this->powerlevels_list
+        ];
+    }
 
     public function setBand(
         int $id,
@@ -78,9 +84,11 @@ class VTX
                 }
 
                 switch ($mode) {
-                    case self::MIN_FREQUENCY:$comparison = $frequency < $val['frequency'];
+                    case self::MIN_FREQUENCY:
+                        $comparison = $frequency < $val['frequency'];
                         break;
-                    case self::MAX_FREQUENCY:$comparison = $frequency > $val['frequency'];
+                    case self::MAX_FREQUENCY:
+                        $comparison = $frequency > $val['frequency'];
                         break;
                 }
 
@@ -127,5 +135,4 @@ class VTX
 
         return $val;
     }
-
 }

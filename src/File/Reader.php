@@ -1,13 +1,13 @@
 <?php
 
-namespace Angorb\BetaflightProfiler;
+namespace Angorb\BetaflightProfiler\File;
 
+use Angorb\BetaflightProfiler\File\FileAttributes;
 use Angorb\BetaflightProfiler\Models\Profile;
 use Angorb\BetaflightProfiler\Models\VTX;
 
 class Reader
 {
-
     private $section;
     private $profileId;
     private $profile;
@@ -17,6 +17,10 @@ class Reader
     {
         $this->profile = new Profile();
         $this->vtx = new VTX();
+
+        if (!\file_exists($file)) {
+            throw new \Exception('Could not open file: ' . $file);
+        }
 
         if ($inFile = \fopen($file, 'r')) {
             // TODO could not open file
@@ -47,20 +51,27 @@ class Reader
         $id = \array_shift($data);
 
         switch ($id) {
-            case '#':$this->parseHeading($data);
+            case '#':
+                $this->parseHeading($data);
                 break;
-            case 'board_name':$this->profile->setBoardName($data[0]);
+            case 'board_name':
+                $this->profile->setBoardName($data[0]);
                 break;
-            case 'manufacturer_id':$this->profile->setManufacturerId($data[0]);
+            case 'manufacturer_id':
+                $this->profile->setManufacturerId($data[0]);
                 break;
-            case 'mcu_id':$this->profile->setMcuId($data[0]);
+            case 'mcu_id':
+                $this->profile->setMcuId($data[0]);
                 break;
             case 'profile':
-            case 'rateprofile':$this->profileId = $data[0];
+            case 'rateprofile':
+                $this->profileId = $data[0];
                 break;
-            case 'set':$this->setProperty($data);
+            case 'set':
+                $this->setProperty($data);
                 break;
-            case 'vtxtable':$this->parseVTX($data);
+            case 'vtxtable':
+                $this->parseVTX($data);
                 break;
         }
     }
@@ -93,7 +104,6 @@ class Reader
 
     private function parseHeading(array $data)
     {
-
         if (empty($data)) {
             return;
         }
@@ -106,7 +116,7 @@ class Reader
 
         $this->section = $section;
 
-        if (!empty($this->profileId) && !\in_array($section, Settings::$indexedProfiles)) {
+        if (!empty($this->profileId) && !\in_array($section, FileAttributes::$indexedProfiles)) {
             unset($this->profileId);
         }
     }
@@ -125,12 +135,12 @@ class Reader
             $value = \implode(" ", \array_slice($data, 2));
         }
 
-        if ($section === Settings::$masterPropertyName) {
+        if ($section === FileAttributes::$masterPropertyName) {
             $this->profile->setMasterProperty($name, $value);
             return;
         }
 
-        if (\in_array($section, Settings::$indexedProfiles) && isset($this->profileId)) {
+        if (\in_array($section, FileAttributes::$indexedProfiles) && isset($this->profileId)) {
             $this->profile->setProfileProperty(
                 $this->section,
                 $this->profileId,

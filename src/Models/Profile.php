@@ -2,12 +2,11 @@
 
 namespace Angorb\BetaflightProfiler\Models;
 
-use Angorb\BetaflightProfiler\Settings;
-use Angorb\BetaflightProfiler\Traits\Savable;
+use Angorb\BetaflightProfiler\File\FileAttributes;
+use JsonSerializable;
 
-class Profile
+class Profile implements JsonSerializable
 {
-    use Savable;
     # board information
     protected $board_name;
     protected $manufacturer_id;
@@ -15,10 +14,38 @@ class Profile
 
     #properties
     protected $master;
+    protected $vtx;
+
+    public function jsonSerialize(): mixed
+    {
+        $profile = [
+            'board_name' => $this->board_name,
+            'manufacturer_id' => $this->manufacturer_id,
+            'mcu_id' => $this->mcu_id,
+            'master' => $this->master,
+        ];
+
+        // add rates & profiles
+        foreach (FileAttributes::$indexedProfiles as $indexedProfile) {
+            if (isset($this->$indexedProfile)) {
+                $profile += [
+                    $indexedProfile => $this->$indexedProfile
+                ];
+            }
+        }
+
+        if (isset($this->vtx)) {
+            $profile += [
+                'vtx' => $this->vtx
+            ];
+        }
+
+        return $profile;
+    }
 
     public function setMasterProperty($name, $value)
     {
-        $propertyName = Settings::$masterPropertyName;
+        $propertyName = FileAttributes::$masterPropertyName;
         $this->$propertyName[$name] = $value;
     }
     public function setProfileProperty(string $profile, int $id, string $name, $value)

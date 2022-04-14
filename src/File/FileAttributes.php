@@ -1,8 +1,8 @@
 <?php
 
-namespace Angorb\BetaflightProfiler;
+namespace Angorb\BetaflightProfiler\File;
 
-class Settings
+class FileAttributes
 {
     public static $masterPropertyName = 'master';
     public static $indexedProfiles = [

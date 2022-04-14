@@ -4,7 +4,7 @@ namespace Angorb\BetaflightProfiler\File;
 
 use Angorb\BetaflightProfiler\File\FileAttributes;
 use Angorb\BetaflightProfiler\Models\Profile;
-use Angorb\BetaflightProfiler\Models\VTX;
+use Angorb\BetaflightProfiler\Models\VtxProfile;
 
 class Reader
 {
@@ -16,7 +16,7 @@ class Reader
     private function __construct(string $file)
     {
         $this->profile = new Profile();
-        $this->vtx = new VTX();
+        $this->vtx = new VtxProfile();
 
         if (!\file_exists($file)) {
             throw new \Exception('Could not open file: ' . $file);
@@ -40,7 +40,7 @@ class Reader
         $reader = new Reader($file);
         // add VTX table
         if (!empty($reader->vtx)) {
-            $reader->profile->setVTX($reader->vtx);
+            $reader->profile->setVtxProfile($reader->vtx);
         }
         return $reader->profile;
     }
@@ -73,6 +73,8 @@ class Reader
             case 'vtxtable':
                 $this->parseVTX($data);
                 break;
+            default:
+                echo 'Discarded ' . $line . \PHP_EOL; // DEBUG
         }
     }
 

@@ -90,12 +90,12 @@ class Profile implements JsonSerializable
         return $this->name ?? null;
     }
 
-    public function setVTX(VTX $vtx)
+    public function setVtxProfile(VtxProfile $vtx)
     {
         $this->vtx = $vtx;
     }
 
-    public function hasVTX(): bool
+    public function hasVtxProfile(): bool
     {
         return !empty($this->vtx);
     }

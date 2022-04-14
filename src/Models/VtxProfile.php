@@ -4,7 +4,7 @@ namespace Angorb\BetaflightProfiler\Models;
 
 use JsonSerializable;
 
-class VTX implements JsonSerializable
+class VtxProfile implements JsonSerializable
 {
     protected const MIN_FREQUENCY = 0;
     protected const MAX_FREQUENCY = 1;
